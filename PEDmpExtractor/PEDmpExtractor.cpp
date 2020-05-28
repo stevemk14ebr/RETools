@@ -4,7 +4,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-
+#include <string>
+#include <filesystem>
 #include <Windows.h>
 
 enum class Arch {
@@ -90,5 +91,20 @@ int main(int argc, char* argv[])
         }
 
         std::cout << " and of length: " << std::hex << peSize << std::dec << std::endl;
+
+        std::cout << "save this binary (Y/N)" << std::endl;
+        std::string save = "N";
+        std::cin >> save;
+        if (save == "Y" || save =="y") {
+            std::string name = std::string(argv[1]) + "_" + std::to_string(offset) + "_" + std::to_string(peSize) + ".bin";
+            std::cout << "saving binary:" << name << std::endl;
+
+            char* buf = new char[peSize];
+            f.seekg(offset, std::ios::beg);
+            f.read(buf, peSize);
+
+            std::ofstream fout(name, std::ios::binary);
+            fout.write(buf, peSize);
+        }
     }
 }
