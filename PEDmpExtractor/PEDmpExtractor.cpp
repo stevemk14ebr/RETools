@@ -105,6 +105,8 @@ int main(int argc, char* argv[])
 
             std::ofstream fout(name, std::ios::binary);
             fout.write(buf, peSize);
+
+            delete[] buf;
         }
     }
 }
