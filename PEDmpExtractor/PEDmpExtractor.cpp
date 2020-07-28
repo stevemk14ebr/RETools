@@ -29,6 +29,9 @@ int main(int argc, char* argv[])
         if (hdr == 0x5a4d) {
             mz_offsets.push_back(offset);
         }
+
+        // go back 1 byte since we read 2
+        f.seekg(-1, std::ios::cur);
     }
 
     f.clear();
