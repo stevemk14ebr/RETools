@@ -1,0 +1,6 @@
+[submodule "ReClass.NET"]
+	path = ReClass.NET
+	url = https://github.com/ReClassNET/ReClass.NET.git
+[submodule "BlobRunner"]
+	path = BlobRunner
+	url = https://github.com/OALabs/BlobRunner.git
