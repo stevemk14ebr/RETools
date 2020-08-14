@@ -91,9 +91,13 @@ Build in release mode, then debug this executable using x64 dbg and specify the 
    * ExportName as an unquoted string
    * The typedefinition as a C++ typdef in quotes, optional variable names. Use ```()``` instead of ```(void)``` for empty arguments.
    * The arguments in accordance with the typedef, for files you may use ```@``` prefix to load the file's contents
+   
 ```-w``` or ```--wait``` call getchar() just before invoking each jit stub
+
 ```-bp``` or ```--breakpoint``` insert an int3 before invoking each jit stub
+
 ```-m``` use a minimal manual mapper to load the dll instead of LoadLibrary
+
 ```--help``` nah
 
 Supported argument/return types:
