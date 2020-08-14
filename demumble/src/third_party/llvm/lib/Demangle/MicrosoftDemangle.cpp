@@ -2179,7 +2179,7 @@ NodeArrayNode *Demangler::demangleFunctionParameterList(StringView &MangledName,
 
 NodeArrayNode *
 Demangler::demangleTemplateParameterList(StringView &MangledName) {
-  NodeList *Head;
+  NodeList *Head = nullptr;
   NodeList **Current = &Head;
   size_t Count = 0;
 
@@ -2334,24 +2334,37 @@ void Demangler::dumpBackReferences() {
     std::printf("\n");
 }
 
-char *llvm::microsoftDemangle(const char *MangledName, char *Buf, size_t *N,
+char *llvm::microsoftDemangle(const char *MangledName, size_t *NMangled,
+                              char *Buf, size_t *N,
                               int *Status, MSDemangleFlags Flags) {
-  int InternalStatus = demangle_success;
   Demangler D;
   OutputStream S;
 
   StringView Name{MangledName};
   SymbolNode *AST = D.parse(Name);
+  if (!D.Error && NMangled)
+    *NMangled = Name.begin() - MangledName;
 
   if (Flags & MSDF_DumpBackrefs)
     D.dumpBackReferences();
 
+  OutputFlags OF = OF_Default;
+  if (Flags & MSDF_NoCallingConvention)
+    OF = OutputFlags(OF | OF_NoCallingConvention);
+  if (Flags & MSDF_NoAccessSpecifier)
+    OF = OutputFlags(OF | OF_NoAccessSpecifier);
+  if (Flags & MSDF_NoReturnType)
+    OF = OutputFlags(OF | OF_NoReturnType);
+  if (Flags & MSDF_NoMemberType)
+    OF = OutputFlags(OF | OF_NoMemberType);
+
+  int InternalStatus = demangle_success;
   if (D.Error)
     InternalStatus = demangle_invalid_mangled_name;
   else if (!initializeOutputStream(Buf, N, S, 1024))
     InternalStatus = demangle_memory_alloc_failure;
   else {
-    AST->output(S, OF_Default);
+    AST->output(S, OF);
     S += '\0';
     if (N != nullptr)
       *N = S.getCurrentPosition();

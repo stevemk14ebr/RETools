@@ -3,15 +3,13 @@
 `demumble` is a python3 library that demangles both Itanium and Visual Studio symbols. It runs on both
 POSIX and Windows. It also handles RTTI mangled types. This is a modification of https://github.com/nico/demumble
 
-# installation
-Make sure pip version > 19.1. There is a bug in pip's index url handling before that.
-```pip3 install --extra-index-url https://artifactory.services.fireeye.com/artifactory/api/pypi/flare-python/simple/ --trusted-host artifactory.services.fireeye.com demumble```
+## Build
 
-## locally
+This is a cmake project, the windows build requires Visual Studio. You may build with the two included scripts:
+`build_unix.sh` and `build_win.bat`. To create the python `.whl` run the respective build scripts on windows and linux machines and copy the build `.so` and `.dll` to the same machine. On that machine run `python3 setup.py bdist_wheel`. Alternatively just run `python3 setup.py install` for a local installation.
+
+## Locally
 clone this repo and run `python3 setup.py install`
-
-# build
-This is a CMake project, it will build on unix based OS-es and windows. If you want to build manually you can run ```sudo apt-get install cmake``` then `build_unix.sh` or `build_win.bat` files. You may then run the python script directly. In order to build the python wheel run both of those scripts on a windows and linux machine, copy the dlls to the same machine, then run `python3 setup.py bdist_wheel`
 
 # usage
 The python script is a simple wrapper around the C++ library. There are 4 APIs

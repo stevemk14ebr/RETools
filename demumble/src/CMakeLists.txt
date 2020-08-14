@@ -51,6 +51,11 @@ add_library(demumble_static STATIC
                third_party/llvm/lib/Demangle/MicrosoftDemangle.cpp
                third_party/llvm/lib/Demangle/MicrosoftDemangleNodes.cpp
 )
+add_executable(demumble_test demumble.cpp
+               third_party/llvm/lib/Demangle/ItaniumDemangle.cpp
+               third_party/llvm/lib/Demangle/MicrosoftDemangle.cpp
+               third_party/llvm/lib/Demangle/MicrosoftDemangleNodes.cpp)
+			   
 set_target_properties(demumble_static PROPERTIES CXX_STANDARD 11
                                           CXX_STANDARD_REQUIRED ON)
 set_target_properties(demumble_static PROPERTIES OUTPUT_NAME demumble_static)
