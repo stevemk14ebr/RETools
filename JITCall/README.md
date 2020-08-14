@@ -83,7 +83,49 @@ cd JITCall
 git submodule update --init --recursive
 ```
 
-Build in release mode, and then simply replace the x64dbg loaddll.exe with this application. Only new builds of x64dbg will have this executable, in previous versions it is extracted dynamically as a resource file, please upgrade your x64dbg version in this case. For convenience this projects Github Releases provides a ready-to-go build of both that should work out of the box.
+Build in release mode, then debug this executable using x64 dbg and specify the commandline flags to JIT stubs for your dll exports.
+
+# CommandLine Flag
+
+```-f``` or ```--func``` declares a new export to JIT. This flag expects
+   * ExportName as an unquoted string
+   * The typedefinition as a C++ typdef in quotes, optional variable names. Use ```()``` instead of ```(void)``` for empty arguments.
+   * The arguments in accordance with the typedef, for files you may use ```@``` prefix to load the file's contents
+```-w``` or ```--wait``` call getchar() just before invoking each jit stub
+```-bp``` or ```--breakpoint``` insert an int3 before invoking each jit stub
+```-m``` use a minimal manual mapper to load the dll instead of LoadLibrary
+```--help``` nah
+
+Supported argument/return types:
+```
+void
+int8_t
+char
+uint8_t
+int16_t
+uint16_t
+int32_t
+uint32_t
+int
+int64_t
+uint64_t
+float
+double
+
+optional * on any of the above.
+```
+
+Supported calling conventions:
+```
+cdecl
+fastcall
+stdcall
+```
+
+Example:
+```
+<JITCall.exe> C:\a.dll -w -m -f Setup "void (char* name, char)" "this is a test" 0x30 -f Run "char stdcall (char*)" "@C:\contents.txt"
+```
 
 # Implementation
 Given a typdef of a function sscanf string arguments into uint64_t array based on given type. Then abuse ASMJit to JIT a little wrapper function that will take the parameter array as input and map the slots in the array to the correct ABI locations (stack/reg) for the call we are doing. Then invoke this JIT stub from C.
