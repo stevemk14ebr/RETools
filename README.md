@@ -9,6 +9,7 @@ Random tools I made or otherwise just use for reversing quickly.
 
 # demumble
 * C++ library with python wrapper to demangle Itanium and MSVC symbols on all platforms (Linux, Mac, Windows)
+  * Modified from: https://github.com/nico/demumble
 
 # JITCall 
 * Command line application to JIT compile a calling stub around N number of dll exports with arguments provided the calling convention. Supports manual mapping to easily debug dllmain and can read binary files to pass arbitrary data as argument. Wait for execution by key press or int3.
