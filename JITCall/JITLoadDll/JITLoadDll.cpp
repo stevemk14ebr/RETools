@@ -83,9 +83,9 @@ int wmain(int argc, wchar_t* argv[]) {
 	if (cmdLine->loadType == JITCall::LoadType::MANUAL_BASIC) {
 		std::cout << "[+] Manual load selected!" << std::endl;
 		manualMapper = ManualMapper();
-		loadedModule = manualMapper->mapImage(cmdLine->dllPath.c_str());
+		loadedModule = manualMapper->mapImage(cmdLine->loadFilePath.c_str());
 	} else {
-		loadedModule = LoadLibraryW(cmdLine->dllPath.c_str());
+		loadedModule = LoadLibraryW(cmdLine->loadFilePath.c_str());
 	}
 
 	for (uint8_t i = 0; i < cmdLine->exportFnMap.size(); i++) {

@@ -57,7 +57,8 @@ public:
 
 	enum class LoadType {
 		NT_LOADLIB,
-		MANUAL_BASIC
+		MANUAL_BASIC,
+		SHELLCODE
 	};
 
 	class Parameters {

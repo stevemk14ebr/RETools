@@ -40,7 +40,6 @@ static inline void ltrim(std::string& s) {
 		}));
 }
 
-
 // trim from end (in place)
 static inline void rtrim(std::string& s) {
 	s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
@@ -134,7 +133,6 @@ struct FNTypeDef {
 	std::string callConv;
 	std::vector<std::string> argTypes;
 };
-
 
 // A FNTypeDef w/ associated parameters
 struct BoundFNTypeDef {
@@ -238,8 +236,7 @@ std::optional<FNTypeDef> regex_typedef(std::string input) {
 bool formatType(std::string* type, std::string data, uint64_t* outData, BoundFNTypeDef::PinnedData* arbitraryData) {
 	assert(outData != nullptr);
 	assert(type != nullptr);
-	assert(arbitraryData != nullptr);
-	if (outData == nullptr || type == nullptr || arbitraryData == nullptr)
+	if (outData == nullptr || type == nullptr)
 		return false;
 
 	// if any type is ptr, make it the arch's int ptr type
@@ -248,7 +245,12 @@ bool formatType(std::string* type, std::string data, uint64_t* outData, BoundFNT
 		auto realType = type->substr(0, idx);
 		*type = sizeof(char*) == 4 ? "uint32_t" : "uint64_t";
 
-		if (realType == "char" || realType == "void*" || realType == "uint8_t") {
+		// if underlying type is supported and arbitraryData pointer was passed, read data into that pointer
+		if ((realType == "char" || realType == "void*" || realType == "uint8_t") && arbitraryData) {
+			assert(arbitraryData != nullptr);
+			if (arbitraryData == nullptr)
+				return false;
+
 			// parse as a file path if @ given, or as literal string if not
 			if (data.at(0) == '@' && data.size() > 1) {
 				auto filename = data.substr(1, data.length() - 1);
@@ -339,7 +341,8 @@ struct CommandLineInput {
 	// boundFunction idx -> export name
 	std::unordered_map<uint8_t, std::string> exportFnMap;
 	
-	std::wstring dllPath;
+	std::wstring loadFilePath;
+	uint64_t scBase;
 	JITCall::WaitType waitType;
 	JITCall::LoadType loadType;
 };
@@ -352,11 +355,15 @@ struct RawCmdArgs {
 	JITCall::WaitType waitType;
 	JITCall::LoadType loadType;
 
+	std::string cmdSCBase;
+
 	RawCmdArgs() {
 		const uint8_t fnMaxCount = 5;
 		cmdFnArgs.reserve(fnMaxCount);
 		cmdFnTypeDef.reserve(fnMaxCount);
 		cmdFnExport.reserve(fnMaxCount);
+
+		cmdSCBase = "0";
 
 		waitType = JITCall::WaitType::NONE;
 		loadType = JITCall::LoadType::NT_LOADLIB;
@@ -401,12 +408,13 @@ bool parse(std::vector<std::wstring> args, RawCmdArgs& cmdLine) {
 		NEXT,
 		FN_EXPORT,
 		FN_TYPEDEF,
+		SHELLCODE_BASE,
 		OPT_FN_ARG,
 	};
 
 	// Every optional value could be a new flag, here's a convenience helper
 	auto is_flag = [=](const std::wstring arg) -> bool {
-		std::set<std::wstring> flags = { L"--help", L"-bp", L"--breakpoint", L"-w", L"--wait", L"-m", L"--manual", L"-f", L"--func" };
+		std::set<std::wstring> flags = { L"--help", L"-bp", L"--breakpoint", L"-w", L"--wait", L"-m", L"--manual", L"-f", L"--func", L"-scb", L"--shellcodebase" };
 		return flags.find(arg) != flags.end();
 	};
 
@@ -429,10 +437,18 @@ bool parse(std::vector<std::wstring> args, RawCmdArgs& cmdLine) {
 			} else if (arg == L"-w" || arg == L"--wait") {
 				cmdLine.waitType = JITCall::WaitType::WAIT_KEYPRESS;
 			} else if (arg == L"-m" || arg == L"--manual") {
+				if (cmdLine.loadType == JITCall::LoadType::SHELLCODE) {
+					std::wcout << L"[!] Shellcode already chosen, cannot set alternative load scheme" << std::endl;
+					return false;
+				}
 				cmdLine.loadType = JITCall::LoadType::MANUAL_BASIC;
 			} else if (arg == L"-f" || arg == L"--func") {
 				// look for export name next
 				parseState = ParserState::FN_EXPORT;
+			} else if (arg == L"-scb" || arg == L"--shellcodebase") {
+				// set shellcode load first, then read the base address next
+				cmdLine.loadType = JITCall::LoadType::SHELLCODE;
+				parseState = ParserState::SHELLCODE_BASE;
 			} else {
 				// there's a missing flag in the if statement
 				assert(false);
@@ -440,6 +456,9 @@ bool parse(std::vector<std::wstring> args, RawCmdArgs& cmdLine) {
 				return false;
 			}
 			break;
+		case ParserState::SHELLCODE_BASE:
+			cmdLine.cmdSCBase = u16Tou8(arg);
+			parseState = ParserState::NEXT;
 		case ParserState::FN_EXPORT:
 			cmdLine.cmdFnExport.push_back(u16Tou8(arg));
 			parseState = ParserState::FN_TYPEDEF;
@@ -482,7 +501,7 @@ std::optional<CommandLineInput> parseCommandLine(std::vector<std::wstring> raw) 
 	CommandLineInput commandlineInput; // out
 
 	if (parse(raw, rawArgs)) {
-		commandlineInput.dllPath = rawArgs.cmdInputFile;
+		commandlineInput.loadFilePath = rawArgs.cmdInputFile;
 
 		// for each typedef
 		for (uint8_t i = 0; i < rawArgs.cmdFnTypeDef.size(); i++) {
@@ -534,11 +553,13 @@ std::optional<CommandLineInput> parseCommandLine(std::vector<std::wstring> raw) 
 				std::cout << "[!] Invalid function typedef provided, exiting" << std::endl;
 			}
 		}
+
+		std::string scBaseFormat = "uint64_t";
+		formatType(&scBaseFormat, rawArgs.cmdSCBase, &commandlineInput.scBase, nullptr);
+		commandlineInput.loadType = rawArgs.loadType;
+		commandlineInput.waitType = rawArgs.waitType;
 	} else {
 		printUsage();
 	}
-
-	commandlineInput.loadType = rawArgs.loadType;
-	commandlineInput.waitType = rawArgs.waitType;
 	return commandlineInput;
 }
