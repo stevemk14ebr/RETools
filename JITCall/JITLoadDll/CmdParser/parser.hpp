@@ -459,6 +459,7 @@ bool parse(std::vector<std::wstring> args, RawCmdArgs& cmdLine) {
 		case ParserState::SHELLCODE_BASE:
 			cmdLine.cmdSCBase = u16Tou8(arg);
 			parseState = ParserState::NEXT;
+			break;
 		case ParserState::FN_EXPORT:
 			cmdLine.cmdFnExport.push_back(u16Tou8(arg));
 			parseState = ParserState::FN_TYPEDEF;

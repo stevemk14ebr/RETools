@@ -84,6 +84,8 @@ int wmain(int argc, wchar_t* argv[]) {
 		std::cout << "[+] Manual load selected!" << std::endl;
 		manualMapper = ManualMapper();
 		loadedModule = manualMapper->mapImage(cmdLine->loadFilePath.c_str());
+	} else if (cmdLine->loadType == JITCall::LoadType::SHELLCODE) {
+		// TODO
 	} else {
 		loadedModule = LoadLibraryW(cmdLine->loadFilePath.c_str());
 	}
