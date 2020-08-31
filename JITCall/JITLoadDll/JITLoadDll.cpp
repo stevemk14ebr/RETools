@@ -31,6 +31,27 @@ public:
 	BoundFNTypeDef boundFn;
 };
 
+void executeShellcode(std::wstring filePath, uint64_t startOffset) {
+	std::ifstream file(filePath.c_str(), std::ios::binary);
+	if (!file.good()) {
+		std::wcout << L"[!] Unable to open given file: " << filePath << L" this is fatal!" << std::endl;
+		return;
+	}
+
+	// Stop eating new lines in binary mode
+	file.unsetf(std::ios::skipws);
+
+	file.seekg(0, std::ios::end);
+	std::streampos fileSize = file.tellg();
+	file.seekg(0, std::ios::beg);
+
+	std::byte* data = (std::byte*)VirtualAlloc(0, fileSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	file.read((char*)data, fileSize);
+
+	typedef void(*tCall)();
+	((tCall)(data + startOffset))();
+}
+
 int wmain(int argc, wchar_t* argv[]) {
 	std::vector<std::wstring> raw;
 
@@ -85,7 +106,8 @@ int wmain(int argc, wchar_t* argv[]) {
 		manualMapper = ManualMapper();
 		loadedModule = manualMapper->mapImage(cmdLine->loadFilePath.c_str());
 	} else if (cmdLine->loadType == JITCall::LoadType::SHELLCODE) {
-		// TODO
+		// TODO: Jit this instead, add wait types
+		executeShellcode(cmdLine->loadFilePath, cmdLine->scBase);
 	} else {
 		loadedModule = LoadLibraryW(cmdLine->loadFilePath.c_str());
 	}

@@ -143,7 +143,7 @@ struct BoundFNTypeDef {
 	// us 'return' the vector without worrying its underlying memory moves.
 	// Sooooo, we can freely take dangerous types of pointers like &vec[0]
 	// and not worry about dangling references ever as the vector will never re-alloc.
-	typedef std::unique_ptr<std::vector<char>> PinnedData;
+	typedef std::unique_ptr<std::vector<std::byte>> PinnedData;
 
 	BoundFNTypeDef() = delete;
 
@@ -268,15 +268,13 @@ bool formatType(std::string* type, std::string data, uint64_t* outData, BoundFNT
 				file.seekg(0, std::ios::beg);
 
 				// reserve capacity
-				arbitraryData->reset(new std::vector<char>(fileSize));
+				arbitraryData->reset(new std::vector<std::byte>(fileSize, (std::byte)0));
 				
 				// read the file data
-				arbitraryData->get()->insert(arbitraryData->get()->begin(),
-					std::istream_iterator<uint8_t>(file),
-					std::istream_iterator<uint8_t>());
+				file.read((char*)arbitraryData->get()->data(), fileSize);
 			} else {
 				// alloc and null terminate
-				arbitraryData->reset(new std::vector<char>(data.size() + 1, 0));
+				arbitraryData->reset(new std::vector<std::byte>(data.size() + 1, (std::byte)0));
 
 				// copy the data, valid as we really inserted 0's in the vector so backing mem is there
 				memcpy(arbitraryData->get()->data(), data.data(), data.size());
