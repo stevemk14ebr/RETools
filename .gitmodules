@@ -4,3 +4,6 @@
 [submodule "BlobRunner"]
 	path = BlobRunner
 	url = https://github.com/OALabs/BlobRunner.git
+[submodule "JITCall/asmjit"]
+	path = JITCall/asmjit
+	url = https://github.com/asmjit/asmjit.git/

@@ -31,6 +31,27 @@ public:
 	BoundFNTypeDef boundFn;
 };
 
+// VirtualFree this when done
+std::byte* loadShellcode(std::wstring filePath) {
+	std::ifstream file(filePath.c_str(), std::ios::binary);
+	if (!file.good()) {
+		std::wcout << L"[!] Unable to open given file: " << filePath << L" this is fatal!" << std::endl;
+		return nullptr;
+	}
+
+	// Stop eating new lines in binary mode
+	file.unsetf(std::ios::skipws);
+
+	file.seekg(0, std::ios::end);
+	std::streampos fileSize = file.tellg();
+	file.seekg(0, std::ios::beg);
+
+	std::byte* data = (std::byte*)VirtualAlloc(0, fileSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	file.read((char*)data, fileSize);
+
+	return data;
+}
+
 int wmain(int argc, wchar_t* argv[]) {
 	std::vector<std::wstring> raw;
 
@@ -78,36 +99,61 @@ int wmain(int argc, wchar_t* argv[]) {
 	}
 
 	std::vector<JITEnv> jitEnvs;
-	std::optional<ManualMapper> manualMapper;
-	HMODULE loadedModule = NULL;
-	if (cmdLine->loadType == JITCall::LoadType::MANUAL_BASIC) {
-		std::cout << "[+] Manual load selected!" << std::endl;
-		manualMapper = ManualMapper();
-		loadedModule = manualMapper->mapImage(cmdLine->dllPath.c_str());
-	} else {
-		loadedModule = LoadLibraryW(cmdLine->dllPath.c_str());
-	}
-
-	for (uint8_t i = 0; i < cmdLine->exportFnMap.size(); i++) {
-		std::string exportName = cmdLine->exportFnMap.at(i);
-		uint64_t exportAddr = 0;
-		if (manualMapper) {
-			exportAddr = (uint64_t)manualMapper->getProcAddress(loadedModule, exportName.c_str());
-		} else {
-			exportAddr = (uint64_t)GetProcAddress(loadedModule, exportName.c_str());
-		}
-		 
-		if (exportAddr == 0) {
-			std::cout << "[!] Export: " << exportName << "failed to resolve, is the name correct?" << std::endl;
-			continue;
+	if (cmdLine->loadType == JITCall::LoadType::SHELLCODE) {
+		// TODO: pSC is leaked atm, free this eventually
+		std::byte* pSC = loadShellcode(cmdLine->loadFilePath);
+		if (pSC == nullptr) {
+			std::cout << "[!] Shellcode load failed...fatal!" << std::endl;
+			return 0;
 		}
 
-		std::cout << "[+] Adding JIT Stub for Export: " << exportName << " at: " << std::hex << exportAddr << std::dec << " ..." << std::endl;
-		JITEnv env(std::move(cmdLine->boundFunctions.at(i)), exportAddr);
+		uint64_t pSCEntryPoint = (uint64_t)pSC + cmdLine->scBase;
+
+		std::cout << "[+] Adding JIT Stub for shellcode at base: " << std::hex << (uint64_t)pSC << " with entrypoint: " << pSCEntryPoint << std::dec << " ..." << std::endl;
+
+		// only 1 SC entrpoint allowed
+		JITEnv env(std::move(cmdLine->boundFunctions.at(0)), pSCEntryPoint);
 		env.invokeJit(cmdLine->waitType);
 
 		jitEnvs.push_back(std::move(env));
 		std::cout << "[+] Done." << std::endl;
+	} else {
+		HMODULE loadedModule = NULL;
+		std::optional<ManualMapper> manualMapper;
+		if (cmdLine->loadType == JITCall::LoadType::MANUAL_BASIC) {
+			std::cout << "[+] Manual load selected!" << std::endl;
+			manualMapper = ManualMapper();
+			loadedModule = manualMapper->mapImage(cmdLine->loadFilePath.c_str());
+		} else if (cmdLine->loadType == JITCall::LoadType::NT_LOADLIB) {
+			loadedModule = LoadLibraryW(cmdLine->loadFilePath.c_str());
+		}
+
+		if (loadedModule == NULL) {
+			std::cout << "[!] Module load failed...fatal!" << std::endl;
+			return 0;
+		}
+
+		for (uint8_t i = 0; i < cmdLine->exportFnMap.size(); i++) {
+			std::string exportName = cmdLine->exportFnMap.at(i);
+			uint64_t exportAddr = 0;
+			if (manualMapper) {
+				exportAddr = (uint64_t)manualMapper->getProcAddress(loadedModule, exportName.c_str());
+			} else {
+				exportAddr = (uint64_t)GetProcAddress(loadedModule, exportName.c_str());
+			}
+
+			if (exportAddr == 0) {
+				std::cout << "[!] Export: " << exportName << "failed to resolve, is the name correct?" << std::endl;
+				continue;
+			}
+
+			std::cout << "[+] Adding JIT Stub for Export: " << exportName << " at: " << std::hex << exportAddr << std::dec << " ..." << std::endl;
+			JITEnv env(std::move(cmdLine->boundFunctions.at(i)), exportAddr);
+			env.invokeJit(cmdLine->waitType);
+
+			jitEnvs.push_back(std::move(env));
+			std::cout << "[+] Done." << std::endl;
+		}
 	}
 
 	// Invoke in order
@@ -125,6 +171,7 @@ int wmain(int argc, wchar_t* argv[]) {
 		env.call(args);
 	}
 
+	std::cout << "[+] Done invoking everything...press any key to exit" << std::endl;
 	getchar();
 	return 0;
 }
