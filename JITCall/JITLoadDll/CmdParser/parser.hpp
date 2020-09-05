@@ -456,7 +456,7 @@ bool parse(std::vector<std::wstring> args, RawCmdArgs& cmdLine) {
 			break;
 		case ParserState::SHELLCODE_BASE:
 			cmdLine.cmdSCBase = u16Tou8(arg);
-			parseState = ParserState::NEXT;
+			parseState = ParserState::FN_TYPEDEF;
 			break;
 		case ParserState::FN_EXPORT:
 			cmdLine.cmdFnExport.push_back(u16Tou8(arg));
@@ -546,7 +546,11 @@ std::optional<CommandLineInput> parseCommandLine(std::vector<std::wstring> raw) 
 
 				jitTypeDef.typeDef = *fnDef;
 				commandlineInput.boundFunctions.push_back(std::move(jitTypeDef));
-				commandlineInput.exportFnMap[i] = rawArgs.cmdFnExport[i];
+
+				// shellcode load type doesn't use exports map
+				if (rawArgs.loadType != JITCall::LoadType::SHELLCODE) {
+					commandlineInput.exportFnMap[i] = rawArgs.cmdFnExport[i];
+				}
 				std::cout << std::endl;
 			} else {
 				std::cout << "[!] Invalid function typedef provided, exiting" << std::endl;
