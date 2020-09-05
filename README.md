@@ -12,7 +12,7 @@ Random tools I made or otherwise just use for reversing quickly.
   * Modified from: https://github.com/nico/demumble
 
 # JITCall 
-* Command line application to JIT compile a calling stub around N number of dll exports with arguments provided the calling convention. Supports manual mapping to easily debug dllmain and can read binary files to pass arbitrary data as argument. Wait for execution by key press or int3.
+* Command line application to JIT compile a calling stub around N number of dll exports with arguments provided the calling convention. Additionally can load shellcode or manual mapping of dlls to easily debug dllmain and can read binary files to pass arbitrary data as argument. Wait for execution by key press or int3.
 
 # BlobRunner
 * Allocate and run shellcode, print shellcode base and wait for execution by key press.
