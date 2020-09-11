@@ -16,3 +16,6 @@ Random tools I made or otherwise just use for reversing quickly.
 
 # BlobRunner
 * Allocate and run shellcode, print shellcode base and wait for execution by key press.
+
+# IdaScripts
+Python helper scripts to do random stuff. May contain wrappers around ida operations, binja operations, or misc python utilities useful in low level stuff.
