@@ -16,3 +16,6 @@
 [submodule "IdaScripts/plugins/IDAFuzzy"]
 	path = IdaScripts/plugins/IDAFuzzy
 	url = https://github.com/Ga-ryo/IDAFuzzy.git
+[submodule "IdaScripts/COM-Code-Helper"]
+	path = IdaScripts/COM-Code-Helper
+	url = https://github.com/stevemk14ebr/COM-Code-Helper.git
