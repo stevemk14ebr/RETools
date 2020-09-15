@@ -19,3 +19,8 @@ Random tools I made or otherwise just use for reversing quickly.
 
 # IdaScripts
 Python helper scripts to do random stuff. May contain wrappers around ida operations, binja operations, or misc python utilities useful in low level stuff.
+
+ * Plugins:
+     Ida plugins. Either raw binaries or submodules to the project if it's on github (and installable via src).
+ * SLib:
+     Steve's python lib. Simple python helpers to do binary work packaged into a nice python module.
