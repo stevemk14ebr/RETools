@@ -1,0 +1,133 @@
+
+IDA Signsrch
+===============================================================================
+IDA Pro plug-in conversion of Luigi Auriemma's signsrch signature matching
+tool.
+
+Version 1.6, July 2018
+By Sirmabus
+
+----- [Description] -----------------------------------------------------------
+
+Luigi's original signsrch description:
+"Tool for searching signatures inside files, extremely useful as help in
+reversing jobs like figuring or having an initial idea of what encryption
+compression algorithm is used for a proprietary protocol or file.
+It can recognize tons of compression, multimedia and encryption algorithms and
+many other things like known strings and anti-debugging code which can be also
+manually added since it's all based on a text signature file read at runtime
+and easy to modify."
+
+By converting his tool into a plug-in, it allows it to be run directly in an
+IDA Pro environment.
+
+
+----- [Install] ---------------------------------------------------------------
+Copy the plug-in and signsrch.xml file to your IDA Pro "plugins" directory.
+
+Can be added with a hotkey to your "plugins.cfg" file or run directly from
+IDA's "Edit->Plugins" menu.
+
+
+----- [How to run it] ---------------------------------------------------------
+Invoke like any other plug-in in IDA through the hot key, or through the IDA's
+Edit->Plugins menu.
+
+You should be presented with the "IDA Signsrch" plug-in dialog.
+
+There are four options:
+
+1) "Alternate endian search.":
+What is "endian" you say? http://en.wikipedia.org/wiki/Endianness
+By default the plug-in will use the endian based on the IDB (not the current
+machine like the exe does).  It is better left unchecked in most circumstances
+as otherwise increases the search time about double.
+If for some reason the target has opposite endian data, then you want to have
+this checked.
+
+If you look in "signsrch.xml" you will see things work as runs of bytes.
+You might think endian is not relative but actually it is here because these
+patterns are often composed of various other data types (like 32bit, etc).
+
+2) "Output to debug channel.":
+With this checked match info will be outputted to the debug out channel.
+You can view the output in a tool like Mark Russinovich's DebugView available
+at: http://goo.gl/D3P0
+
+3) "Include code segments.":
+You normally want this option checked so that signatures can be found in mixed
+code/data segments plus there are several relevant unique 32bit size code value
+signatures in the DB as well.
+Unchecked only data segments (".data", ".rdata", etc) will be searched.
+
+4) "Place signature comments.":
+With this checked as signatures are located a comment will be placed
+automatically made up of a special tag "#Signsrch "followed by the signature
+label name.
+If there is an existing comment at the same place, a space will be appended
+or a new line first if the comment ia long.
+
+Click on "Continue" to execute.
+
+On completion if any matches are found, it will show them sorted by address in
+an IDA list box labeled "[ Signsrch matches ]".
+Browse and double click on a line to jump to it's address location.
+
+
+----- [Design] ----------------------------------------------------------------
+I had been wanting to do this project for some time and thought initially it
+was going to be a quick easy project since there was source for it.
+But after hours of struggling with the parser source, I decided to just rip the
+original parser source out and break it off as a separate XML format exporter.
+
+
+----- [Adding more and editing signatures] ------------------------------------
+The XML format is simple and should be mostly self explanatory when viewed in a
+text or XML viewer. There is however some tags in the label/title that need
+some explanation. In them between two brackets are embedded important details.
+The size, endianness, and an optional bit wise stepping value. The format is
+'[', optional bits value, '.', endian type "le" or "be" w/optional "rev" for
+reverse, '.', the pattern size, then optionally a '&' to indicate the special
+bit stepping value, then a ']' to close.
+Example: "[32.le.56]" means 32 bits, little endian, with a pattern size of 56
+bytes.
+Another: "MD5 digest [32.be.272&amp;]" code in there  means 32 bit stepping
+(the "&amp;"), big endian, and a pattern size of 272 bytes.
+Note in my XML form the bit field ("TYPE" in original format) is only relevant
+when the '&' granularity stepping flag is present.
+
+To add more patterns one can either edit "signsrch.xml", or edit the source
+"signsrch.sig" in it's original formatting style then run it with the included
+"Signsrch2XML.exe" utility to convert it over.
+Just put the "signsrch.sig" file in the same folder as Signsrch2XML and run it,
+then copy the resulting XML file over to your IDA plugins folder.
+
+See the comments at the top of "signsrch.sig" for more information on it's
+formatting.
+
+
+----- [Change log] ------------------------------------------------------------
+1.6 - 1) Updated to IDA SDK 7.1
+      2) Removed most of the custom memory alignment allocator stuff since it's
+         no longer relevant.
+
+1.5 - Updated to IDA SDK 6.9.
+
+1.4 - 1) Updated to IDA SDK 6.8 version.
+      2) Added a 64bit "EA64" version.
+
+1.3 - 1) Fixed bad standard/CRT mixed with custom allocator method bug.
+      2) Updated and fixed custom UI elements.
+
+1.2 - Minor clean up of GUI customizations.
+
+
+Terms of Use
+-------------------------------------------------------------------------------
+This software is provided "as is", without any guarantee made as to its
+suitability or fitness for any particular use. It may contain bugs, so use this
+software is at your own risk.
+The author(s) are not responsible for any damage that may be caused through its
+use.
+
+See "license.txt" for  Luigi Auriemma's signsrch source license.
