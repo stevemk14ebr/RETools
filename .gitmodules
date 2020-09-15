@@ -13,3 +13,6 @@
 [submodule "IdaScripts/plugins/HexRaysPyTools"]
 	path = IdaScripts/plugins/HexRaysPyTools
 	url = https://github.com/igogo-x86/HexRaysPyTools.git
+[submodule "IdaScripts/plugins/IDAFuzzy"]
+	path = IdaScripts/plugins/IDAFuzzy
+	url = https://github.com/Ga-ryo/IDAFuzzy.git
