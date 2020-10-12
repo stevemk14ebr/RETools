@@ -164,9 +164,17 @@ int wmain(int argc, wchar_t* argv[]) {
 		// This logic is inserted by the JIT, just print the messages here
 		// because it's hard to JIT std::cout or printf
 		if (cmdLine->waitType == JITCall::WaitType::WAIT_KEYPRESS) {
-			std::cout << "[+] Press any key to invoke: " << cmdLine->exportFnMap.at(i) << "..." << std::endl;
+			if(cmdLine->exportFnMap.find(i) != cmdLine->exportFnMap.end()) { 
+				std::cout << "[+] Press any key to invoke: " << cmdLine->exportFnMap.at(i) << "..." << std::endl;
+			} else {
+				std::cout << "[+] Press any key to invoke: " << std::endl;
+			}
 		} else if (cmdLine->waitType == JITCall::WaitType::INT3) {
-			std::cout << "[+] INT3 will hit before invoking: " << cmdLine->exportFnMap.at(i) << "..." << std::endl;
+			if (cmdLine->exportFnMap.find(i) != cmdLine->exportFnMap.end()) {
+				std::cout << "[+] INT3 will hit before invoking: " << cmdLine->exportFnMap.at(i) << "..." << std::endl;
+			} else {
+				std::cout << "[+] INT3 will hit before invoking: " << std::endl;
+			}
 		}
 		env.call(args);
 	}

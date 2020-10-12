@@ -330,7 +330,7 @@ void printUsage() {
 	std::cout << "Example 1: <exename> usersMngr.dll -f addUserToList \"void cdecl (char* name, uint8_t)\" \"Tom Sawyer\" 35" << std::endl;
 	std::cout << "Example 2: <exename> usersMngr.dll -f addUserToList \"void cdecl (void* ,void* userAges)\" \"@C:\\Desktop\\users.txt\" \"@D:\\ages.txt\"" << std::endl;
 	std::cout << "Example 3: <exename> mal.dll -f initialize \"void stdcall ()\" -f callout \"int ( int8_t, float sleepInterval)\" 80 1338. -f configureC2 \"bool cdecl (char* url)\" \"127.0.0.1\"" << std::endl;
-	std::cout << "Exports are invoked in numerical order f1, f2, f3, ... up to f5" << std::endl;
+	std::cout << "Exports are invoked in position order, there is no limit" << std::endl;
 }
 
 struct CommandLineInput {
