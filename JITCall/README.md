@@ -92,6 +92,8 @@ Build in release mode, then debug this executable using x64 dbg and specify the 
    * The typedefinition as a C++ typdef in quotes, optional variable names. Use ```()``` instead of ```(void)``` for empty arguments.
    * The arguments in accordance with the typedef, for files you may use ```@``` prefix to load the file's contents
    
+```-scb``` or ```-shellcodebase``` inerprets the given file as a shellcode blog it should VirtualAlloc + VirtualProtect as RWX then execute starting with the offset provided by this command. This offset may be in hex or decimal and is simply added to the base address of the map address then executed as a function pointer. Do not use this with the ```-f``` flag the usage of this flag is mutually exclusive with this flag.
+   
 ```-w``` or ```--wait``` call getchar() just before invoking each jit stub
 
 ```-bp``` or ```--breakpoint``` insert an int3 before invoking each jit stub
@@ -126,9 +128,33 @@ fastcall
 stdcall
 ```
 
-Example:
+Examples:
 ```
-<JITCall.exe> C:\a.dll -w -m -f Setup "void (char* name, char)" "this is a test" 0x30 -f Run "char stdcall (char*)" "@C:\contents.txt"
+JITLoadDll.exe C:\a.dll -w -m -f Setup "void (char* name, char)" "this is a test" 0x30 -f Run "char stdcall (char*)" "@C:\contents.txt"
+
+Basic example - x64
+-------------------
+JITLoadDll.exe TestDll.dll -f exportStringFloatInt8 "void stdcall(char*, float, uint8_t)" "hi" 1337.0f 0x10
+
+Basic example w/ file path - x64
+--------------------------------
+JITLoadDll.exe TestDll.dll -f exportStringFloatInt8 "void stdcall(char*, float, uint8_t)" "@C:\\Users\\steve\\Example.txt" 1338.1337 0xff
+
+Mixing multiple calling conventions - x86
+-----------------------------------
+JITLoadDll.exe TestDll.dll -f exportOneCdecl "void (int i)" 1234567890 -f _exportOneStd@4 "void stdcall (int i)" -0987654321
+
+Await on BP - x86 debugger
+-----------
+JITLoadDll.exe TestDll.dll -f exportOneCdecl "void (int i)" 1234567890 -f _exportOneStd@4 "void stdcall (int i)" -0987654321 -bp
+
+Execute shellcode - x86 debugger
+-----------------
+"JITLoadDll.exe" C:\Users\steve\Desktop\shellcode.bin -scb 0 "void(int i)" 0x10 -bp
+
+Wide arguments on x86
+---------------------
+JITLoadDll.exe TestDll.dll -f exportWideArg "void(uint64_t, uint64_t, uint64_t)" 0xffffffffffffffff 0x10 1337
 ```
 
 # Implementation
