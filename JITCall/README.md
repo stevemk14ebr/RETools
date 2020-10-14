@@ -130,7 +130,7 @@ stdcall
 
 Examples:
 ```
-JITLoadDll.exe C:\a.dll -w -m -f Setup "void (char* name, char)" "this is a test" 0x30 -f Run "char stdcall (char*)" "@C:\contents.txt"
+JITLoadDll.exe C:\a.dll -w -m -f Setup "void (char* name, char)" "this is a test" 0x30 -f Run "char stdcall (char*)" "@C:\\contents.txt"
 
 Basic example - x64
 -------------------
