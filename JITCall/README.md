@@ -118,7 +118,7 @@ uint64_t
 float
 double
 
-optional * on any of the above.
+optional * on any of the above to represent a pointer type
 ```
 
 Supported calling conventions:
