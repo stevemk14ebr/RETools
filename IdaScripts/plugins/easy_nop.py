@@ -1,6 +1,6 @@
 ## mev: https://www.unknowncheats.me/forum/general-programming-and-reversing/343177-easy-nop-ida-plugin.html
 import idaapi
- 
+
 popup_action_names = []
  
 class Hooks(idaapi.UI_Hooks):
@@ -48,12 +48,11 @@ class EA_Action(idaapi.action_handler_t):
  
 class NopAction(EA_Action):
     def activate(self, ctx):
-        info = idaapi.get_inf_structure()
-        selection = idaapi.read_selection()
-        start = selection[1]
-        end = selection[2]
- 
-        if selection[0] == False:
+        t0, t1, view = idaapi.twinpos_t(), idaapi.twinpos_t(), idaapi.get_current_viewer()
+        if idaapi.read_selection(view, t0, t1):
+            start, end = t0.place(view).toea(), t1.place(view).toea()
+            end += idaapi.get_item_size(end)
+        else:
             start = idaapi.get_screen_ea()
  
             if start == idaapi.BADADDR:
@@ -61,8 +60,6 @@ class NopAction(EA_Action):
                 return 0
  
             end = start + idaapi.get_item_size(start)
-        else:
-            end += idaapi.get_item_size(end)
  
         if start == idaapi.BADADDR:
             print('Easy Nop :: Selection EA == idaapi.BADADDR')
