@@ -22,7 +22,12 @@ Python helper scripts to do random stuff. May contain wrappers around ida operat
 
  * Plugins:
      Ida plugins. Either raw binaries or submodules to the project if it's on github (and installable via src).
+     
  * SLib:
      Steve's python lib. Simple python helpers to do binary work packaged into a nice python module.
+     
  * Cfg:
-     My preferences for IDA configuration. idagui.cfg: Escape closes windows disabled via OTHER_CLOSED_BY_ESC, TOOL_CLOSED_BY_ESC, CLOSED_BY_ESC. hexrays.cfg: COLLAPSE_LVARS true, GENERATE_EA_LABELS true, AUTO_UNHIDE true, MAX_FUNCSIZE expanded for stupid obfuscators, PSEUDOCODE_DOCKPOS DP_RIGHT, PSEUDOCODE_SYNCED true, HEXOPTIONS 0x821FF to mask off HO_ESC_CLOSES_VIEW
+     My preferences for IDA configuration. 
+     * idagui.cfg: Escape closes windows disabled via OTHER_CLOSED_BY_ESC, TOOL_CLOSED_BY_ESC, CLOSED_BY_ESC. 
+     * hexrays.cfg: COLLAPSE_LVARS true, GENERATE_EA_LABELS true, AUTO_UNHIDE true, MAX_FUNCSIZE expanded for stupid obfuscators, PSEUDOCODE_DOCKPOS DP_RIGHT, PSEUDOCODE_SYNCED true, HEXOPTIONS 0x821FF to mask off HO_ESC_CLOSES_VIEW
+     * ida.cfg: PACK_DATABASE set to 2 for compressed idbs
