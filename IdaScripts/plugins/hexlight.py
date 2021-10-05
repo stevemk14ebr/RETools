@@ -68,7 +68,7 @@ class hexrays_callback_info(object):
         self.highlights = {}
         self.theotherline = None
         if((ctr > 0) and refresh):
-            idaapi.refresh_idaview_anyway()
+            idaapi.request_refresh(idaapi.IWID_ALL)
 
 
 
@@ -182,7 +182,7 @@ class hexrays_callback_info(object):
                             break
                         j+=dir
                     
-                    idaapi.refresh_idaview_anyway()
+                    idaapi.request_refresh(idaapi.IWID_ALL)
                 else:
                     self.clearall(ps)
                 #print "11"
