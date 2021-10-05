@@ -22,6 +22,12 @@ Python helper scripts to do random stuff. May contain wrappers around ida operat
 
  * Plugins:
      Ida plugins. Either raw binaries or submodules to the project if it's on github (and installable via src).
+     * signsrch: easily create byte signatures of various forms and search for them. Auto-mask the opcode and some immediates
+     * hexlight: highlight bracket pairs in hex-rays pseudocode, press 'b' to jump between start/end brackets
+     * easy_nop: select and right click an assembly sequence to replace with 0x90 nops
+     * capa
+     * HexRaysPyTools: C++ structure rebuilding tool, right click else conditions to swap if/then, much more.
+     * IDAFuzzy: search plugin
      
  * SLib:
      Steve's python lib. Simple python helpers to do binary work packaged into a nice python module.
