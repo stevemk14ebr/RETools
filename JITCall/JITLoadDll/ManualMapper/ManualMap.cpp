@@ -106,9 +106,8 @@ bool ManualMapper::loadImage(char* pBase) {
 			break;
 		}
 	
-		// This is broken
-		/*uint64_t pRebasedCookie = (uint64_t)((pCookie - ntHeader->OptionalHeader.ImageBase) + pBase);
-		memcpy((char*)pRebasedCookie, &cookie, size);*/
+		uint64_t pRebasedCookie = (uint64_t)(pBase + (pCookie - ntHeader->OptionalHeader.ImageBase));
+		memcpy((char*)pRebasedCookie, &cookie, size);
 	}
 
 	// Load deps and resolve imports
@@ -118,6 +117,10 @@ bool ManualMapper::loadImage(char* pBase) {
 		while (pImportDescr->Name) {
 			char* szMod = pBase + pImportDescr->Name;
 			HINSTANCE hDll = LoadLibraryA(szMod);
+			if (!hDll) {
+				std::cout << "[!] Loading import module failed " << szMod << std::endl;
+				continue;
+			}
 
 			uint64_t* pThunkRef = (uint64_t*)(pBase + pImportDescr->OriginalFirstThunk);
 			uint64_t* pFuncRef = (uint64_t*)(pBase + pImportDescr->FirstThunk);
