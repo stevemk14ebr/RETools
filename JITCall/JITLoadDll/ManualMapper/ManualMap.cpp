@@ -27,7 +27,7 @@ bool ManualMapper::loadImage(char* pBase) {
 	auto dosHeader = (IMAGE_DOS_HEADER*)pBase;
 	auto ntHeader = (IMAGE_NT_HEADERS*)(pBase + dosHeader->e_lfanew);
 	auto pOptionalHeader = &ntHeader->OptionalHeader;
-	auto _DllMain = (tDllMain)(pBase + pOptionalHeader->AddressOfEntryPoint);
+	auto _DllMain = pOptionalHeader->AddressOfEntryPoint ? (tDllMain)(pBase + pOptionalHeader->AddressOfEntryPoint) : 0;
 
 	// Fixup Relocs
 	uint8_t* LocationDelta = (uint8_t*)(pBase - pOptionalHeader->ImageBase);
@@ -151,8 +151,13 @@ bool ManualMapper::loadImage(char* pBase) {
 	}
 
 	// Execute main
-	std::cout << "[+] executing images' dllmain" << std::endl;
-	_DllMain(pBase, DLL_PROCESS_ATTACH, nullptr);
+	if (_DllMain) {
+		std::cout << "[+] executing images' dllmain" << std::endl;
+		_DllMain(pBase, DLL_PROCESS_ATTACH, nullptr);
+	} else {
+		std::cout << "[+] image has no dllmain" << std::endl;
+	}
+	std::cout << "[+] done" << std::endl;
 	return true;
 }
 
