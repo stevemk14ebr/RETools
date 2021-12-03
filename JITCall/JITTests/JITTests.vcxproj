@@ -19,20 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\asmjit\src\asmjit\core\arch.cpp" />
+    <ClCompile Include="..\asmjit\src\asmjit\core\archtraits.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\assembler.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\builder.cpp" />
-    <ClCompile Include="..\asmjit\src\asmjit\core\callconv.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\codeholder.cpp" />
+    <ClCompile Include="..\asmjit\src\asmjit\core\codewriter.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\compiler.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\constpool.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\cpuinfo.cpp" />
+    <ClCompile Include="..\asmjit\src\asmjit\core\emithelper.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\emitter.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\emitterutils.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\environment.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\errorhandler.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\formatter.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\func.cpp" />
+    <ClCompile Include="..\asmjit\src\asmjit\core\funcargscontext.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\globals.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\inst.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\jitallocator.cpp" />
@@ -54,16 +56,15 @@
     <ClCompile Include="..\asmjit\src\asmjit\core\zonestack.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\zonetree.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\core\zonevector.cpp" />
-    <ClCompile Include="..\asmjit\src\asmjit\x86\x86archdata.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86assembler.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86builder.cpp" />
-    <ClCompile Include="..\asmjit\src\asmjit\x86\x86callconv.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86compiler.cpp" />
+    <ClCompile Include="..\asmjit\src\asmjit\x86\x86emithelper.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86features.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86formatter.cpp" />
+    <ClCompile Include="..\asmjit\src\asmjit\x86\x86func.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86instapi.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86instdb.cpp" />
-    <ClCompile Include="..\asmjit\src\asmjit\x86\x86internal.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86operand.cpp" />
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86rapass.cpp" />
     <ClCompile Include="..\JITLoadDll\JITCall.cpp" />
@@ -72,21 +73,25 @@
     <ClCompile Include="MainTests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\asmjit\src\asmjit\asmjit-scope-begin.h" />
+    <ClInclude Include="..\asmjit\src\asmjit\asmjit-scope-end.h" />
     <ClInclude Include="..\asmjit\src\asmjit\asmjit.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\api-build_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\api-config.h" />
-    <ClInclude Include="..\asmjit\src\asmjit\core\arch.h" />
+    <ClInclude Include="..\asmjit\src\asmjit\core\archcommons.h" />
+    <ClInclude Include="..\asmjit\src\asmjit\core\archtraits.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\assembler.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\builder.h" />
-    <ClInclude Include="..\asmjit\src\asmjit\core\callconv.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\codebuffer.h" />
-    <ClInclude Include="..\asmjit\src\asmjit\core\codebufferwriter_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\codeholder.h" />
+    <ClInclude Include="..\asmjit\src\asmjit\core\codewriter_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\compiler.h" />
+    <ClInclude Include="..\asmjit\src\asmjit\core\compilerdefs.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\constpool.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\cpuinfo.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\datatypes.h" />
+    <ClInclude Include="..\asmjit\src\asmjit\core\emithelper_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\emitter.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\emitterutils_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\environment.h" />
@@ -94,6 +99,7 @@
     <ClInclude Include="..\asmjit\src\asmjit\core\features.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\formatter.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\func.h" />
+    <ClInclude Include="..\asmjit\src\asmjit\core\funcargscontext_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\globals.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\inst.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\jitallocator.h" />
@@ -122,19 +128,19 @@
     <ClInclude Include="..\asmjit\src\asmjit\core\zonetree.h" />
     <ClInclude Include="..\asmjit\src\asmjit\core\zonevector.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86.h" />
-    <ClInclude Include="..\asmjit\src\asmjit\x86\x86archdata_p.h" />
+    <ClInclude Include="..\asmjit\src\asmjit\x86\x86archtraits_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86assembler.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86builder.h" />
-    <ClInclude Include="..\asmjit\src\asmjit\x86\x86callconv_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86compiler.h" />
+    <ClInclude Include="..\asmjit\src\asmjit\x86\x86emithelper_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86emitter.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86features.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86formatter_p.h" />
+    <ClInclude Include="..\asmjit\src\asmjit\x86\x86func_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86globals.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86instapi_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86instdb.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86instdb_p.h" />
-    <ClInclude Include="..\asmjit\src\asmjit\x86\x86internal_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86opcode_p.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86operand.h" />
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86rapass_p.h" />

@@ -20,7 +20,7 @@
       <UniqueIdentifier>{cd997c7d-065a-4e41-a0df-2ec85b7e6a6e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\asmjit">
-      <UniqueIdentifier>{b37d9ab4-8d68-4bed-b118-82f536c3fce3}</UniqueIdentifier>
+      <UniqueIdentifier>{8bf2886c-8eea-497e-9a93-97200d259bb1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -33,19 +33,16 @@
     <ClCompile Include="ManualMapper\ManualMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\asmjit\src\asmjit\x86\x86archdata.cpp">
-      <Filter>Header Files\asmjit</Filter>
-    </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86assembler.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86builder.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="..\asmjit\src\asmjit\x86\x86callconv.cpp">
+    <ClCompile Include="..\asmjit\src\asmjit\x86\x86compiler.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="..\asmjit\src\asmjit\x86\x86compiler.cpp">
+    <ClCompile Include="..\asmjit\src\asmjit\x86\x86emithelper.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86features.cpp">
@@ -54,13 +51,13 @@
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86formatter.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
+    <ClCompile Include="..\asmjit\src\asmjit\x86\x86func.cpp">
+      <Filter>Header Files\asmjit</Filter>
+    </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86instapi.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86instdb.cpp">
-      <Filter>Header Files\asmjit</Filter>
-    </ClCompile>
-    <ClCompile Include="..\asmjit\src\asmjit\x86\x86internal.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86operand.cpp">
@@ -69,7 +66,7 @@
     <ClCompile Include="..\asmjit\src\asmjit\x86\x86rapass.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="..\asmjit\src\asmjit\core\arch.cpp">
+    <ClCompile Include="..\asmjit\src\asmjit\core\archtraits.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\core\assembler.cpp">
@@ -78,10 +75,10 @@
     <ClCompile Include="..\asmjit\src\asmjit\core\builder.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="..\asmjit\src\asmjit\core\callconv.cpp">
+    <ClCompile Include="..\asmjit\src\asmjit\core\codeholder.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="..\asmjit\src\asmjit\core\codeholder.cpp">
+    <ClCompile Include="..\asmjit\src\asmjit\core\codewriter.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\core\compiler.cpp">
@@ -91,6 +88,9 @@
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\core\cpuinfo.cpp">
+      <Filter>Header Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\asmjit\src\asmjit\core\emithelper.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\core\emitter.cpp">
@@ -109,6 +109,9 @@
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\core\func.cpp">
+      <Filter>Header Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\asmjit\src\asmjit\core\funcargscontext.cpp">
       <Filter>Header Files\asmjit</Filter>
     </ClCompile>
     <ClCompile Include="..\asmjit\src\asmjit\core\globals.cpp">
@@ -188,13 +191,19 @@
     <ClInclude Include="..\asmjit\src\asmjit\asmjit.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
+    <ClInclude Include="..\asmjit\src\asmjit\asmjit-scope-begin.h">
+      <Filter>Header Files\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\asmjit\src\asmjit\asmjit-scope-end.h">
+      <Filter>Header Files\asmjit</Filter>
+    </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\core.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\x86.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="..\asmjit\src\asmjit\x86\x86archdata_p.h">
+    <ClInclude Include="..\asmjit\src\asmjit\x86\x86archtraits_p.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86assembler.h">
@@ -203,10 +212,10 @@
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86builder.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="..\asmjit\src\asmjit\x86\x86callconv_p.h">
+    <ClInclude Include="..\asmjit\src\asmjit\x86\x86compiler.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="..\asmjit\src\asmjit\x86\x86compiler.h">
+    <ClInclude Include="..\asmjit\src\asmjit\x86\x86emithelper_p.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86emitter.h">
@@ -216,6 +225,9 @@
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86formatter_p.h">
+      <Filter>Header Files\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\asmjit\src\asmjit\x86\x86func_p.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86globals.h">
@@ -228,9 +240,6 @@
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86instdb_p.h">
-      <Filter>Header Files\asmjit</Filter>
-    </ClInclude>
-    <ClInclude Include="..\asmjit\src\asmjit\x86\x86internal_p.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\x86\x86opcode_p.h">
@@ -248,7 +257,10 @@
     <ClInclude Include="..\asmjit\src\asmjit\core\api-config.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="..\asmjit\src\asmjit\core\arch.h">
+    <ClInclude Include="..\asmjit\src\asmjit\core\archcommons.h">
+      <Filter>Header Files\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\asmjit\src\asmjit\core\archtraits.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\core\assembler.h">
@@ -257,19 +269,19 @@
     <ClInclude Include="..\asmjit\src\asmjit\core\builder.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="..\asmjit\src\asmjit\core\callconv.h">
-      <Filter>Header Files\asmjit</Filter>
-    </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\core\codebuffer.h">
-      <Filter>Header Files\asmjit</Filter>
-    </ClInclude>
-    <ClInclude Include="..\asmjit\src\asmjit\core\codebufferwriter_p.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\core\codeholder.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
+    <ClInclude Include="..\asmjit\src\asmjit\core\codewriter_p.h">
+      <Filter>Header Files\asmjit</Filter>
+    </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\core\compiler.h">
+      <Filter>Header Files\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\asmjit\src\asmjit\core\compilerdefs.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\core\constpool.h">
@@ -279,6 +291,9 @@
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\core\datatypes.h">
+      <Filter>Header Files\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\asmjit\src\asmjit\core\emithelper_p.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\core\emitter.h">
@@ -300,6 +315,9 @@
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\core\func.h">
+      <Filter>Header Files\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\asmjit\src\asmjit\core\funcargscontext_p.h">
       <Filter>Header Files\asmjit</Filter>
     </ClInclude>
     <ClInclude Include="..\asmjit\src\asmjit\core\globals.h">
