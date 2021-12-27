@@ -9,16 +9,22 @@
 Modified from: https://github.com/ItsJustMeChris/Manual-Mapper/blob/master/Heroin/needle.cpp
 and
 https://github.com/DarthTon/Blackbone/blob/master/src/BlackBone/ManualMap/MMap.cpp
+and
+https://github.com/polycone/pe-loader/blob/master/loader/src/loader/relocations.cpp
 */
 
-#define RELOC_FLAG32(RelInfo) ((RelInfo >> 0x0C) == IMAGE_REL_BASED_HIGHLOW)
-#define RELOC_FLAG64(RelInfo) ((RelInfo >> 0x0C) == IMAGE_REL_BASED_DIR64)
-
-#ifdef _WIN64
-#define RELOC_FLAG RELOC_FLAG64
-#else
-#define RELOC_FLAG RELOC_FLAG32
-#endif
+typedef struct _IMAGE_RELOC
+{
+	union
+	{
+		struct
+		{
+			WORD wOffset : 12;
+			WORD wType : 4;
+		};
+		WORD wData;
+	};
+} IMAGE_RELOC, * PIMAGE_RELOC;
 
 bool ManualMapper::loadImage(char* pBase) {
 	if (!validateImage(pBase))
@@ -30,24 +36,49 @@ bool ManualMapper::loadImage(char* pBase) {
 	auto _DllMain = pOptionalHeader->AddressOfEntryPoint ? (tDllMain)(pBase + pOptionalHeader->AddressOfEntryPoint) : 0;
 
 	// Fixup Relocs
-	uint8_t* LocationDelta = (uint8_t*)(pBase - pOptionalHeader->ImageBase);
-	if (LocationDelta) {
+	int64_t dwDelta = (int64_t)(pBase - pOptionalHeader->ImageBase);
+	if (dwDelta) {
 		if (!pOptionalHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].Size) {
 			std::cout << "[!] image not allocated at preffered base, but has no relocations, loading will attempt to continue" << std::endl;
 		}
 
-		auto pRelocData = (IMAGE_BASE_RELOCATION*)(pBase + pOptionalHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].VirtualAddress);
-		while (pRelocData->VirtualAddress) {
-			uint32_t AmountOfEntries = (pRelocData->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / sizeof(uint16_t);
-			uint16_t* pRelativeInfo = ((uint16_t*)pRelocData + 1);
+		auto dwLimit = (uint64_t)pBase + pOptionalHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].VirtualAddress + pOptionalHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].Size;
+		auto pRelocData = (PIMAGE_BASE_RELOCATION)(pBase + pOptionalHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].VirtualAddress);
+		while ((uint64_t)pRelocData < dwLimit) {
+			uint64_t dwRelocLimit = (uint64_t)pRelocData + pRelocData->SizeOfBlock;
+			uint64_t lpBase = (uint64_t)pBase + pRelocData->VirtualAddress;
+			PIMAGE_RELOC pReloc = (PIMAGE_RELOC)((uint64_t)pRelocData + sizeof(IMAGE_BASE_RELOCATION));
 
-			for (uint32_t i = 0; i != AmountOfEntries; ++i, ++pRelativeInfo) {
-				if (RELOC_FLAG(*pRelativeInfo)) {
-					uintptr_t* pPatch = (uintptr_t*)(pBase + pRelocData->VirtualAddress + ((*pRelativeInfo) & 0xFFF));
-					*pPatch += (uintptr_t)LocationDelta;
+			while ((uint64_t)pReloc < dwRelocLimit)
+			{
+				switch (pReloc->wType)
+				{
+				case IMAGE_REL_BASED_ABSOLUTE:
+					break;
+				case IMAGE_REL_BASED_HIGH:
+					*((uint16_t*)(lpBase + pReloc->wOffset)) += HIWORD(dwDelta);
+					break;
+				case IMAGE_REL_BASED_LOW:
+					*((uint16_t*)(lpBase + pReloc->wOffset)) += LOWORD(dwDelta);
+					break;
+				case IMAGE_REL_BASED_HIGHLOW:
+					*((uint32_t*)(lpBase + pReloc->wOffset)) += dwDelta;
+					break;
+				case IMAGE_REL_BASED_DIR64:
+					*((uint64_t*)(lpBase + pReloc->wOffset)) += dwDelta;
+					break;
+				case IMAGE_REL_BASED_HIGHADJ:
+				{
+					*((uint16_t*)(lpBase + pReloc->wOffset)) += HIWORD(dwDelta);
+					*((uint16_t*)(lpBase + pReloc->wOffset + 2)) = (++pReloc)->wData;
+					break;
 				}
+				default:
+					break;
+				}
+				++pReloc;
 			}
-			pRelocData = (IMAGE_BASE_RELOCATION*)(((char*)pRelocData) + pRelocData->SizeOfBlock);
+			pRelocData = (PIMAGE_BASE_RELOCATION)pReloc;
 		}
 	}
 
@@ -222,8 +253,8 @@ HMODULE ManualMapper::mapImage(std::wstring imagePath) {
 #endif
 
 	// try to load at image base of the old optional header, the size of the optional header image, commit = make , reserve it, execute read write to write the memory
-	pTargetBase = (uint8_t*)VirtualAlloc((char*)pOldOptionalHeader->ImageBase, pOldOptionalHeader->SizeOfImage, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-	if (!pTargetBase) {
+	//pTargetBase = (uint8_t*)VirtualAlloc((char*)pOldOptionalHeader->ImageBase, pOldOptionalHeader->SizeOfImage, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	//if (!pTargetBase) {
 
 		// try any old address now, image base taken probably 
 		pTargetBase = (uint8_t*)VirtualAlloc(nullptr, pOldOptionalHeader->SizeOfImage, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
@@ -231,7 +262,7 @@ HMODULE ManualMapper::mapImage(std::wstring imagePath) {
 			std::cout << "[!] failed to allocate final mapped image memory at any address" << std::endl;
 			return NULL;
 		}
-	}
+	//}
 
 	if (pOldFileHeader->NumberOfSections <= 0) {
 		std::cout << "[!] file has no section, loading aborted" << std::endl;
