@@ -52,62 +52,32 @@ bool ManualMapper::loadImage(char* pBase) {
 	}
 
 	// Initialize security cookies (needed on drivers Win8+). They do a cmp against the constant in the header
-	auto pLoadConfig32 = (IMAGE_LOAD_CONFIG_DIRECTORY32*)(pBase + pOptionalHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG].VirtualAddress);
-	auto pLoadConfig64 = (IMAGE_LOAD_CONFIG_DIRECTORY64*)pLoadConfig32;
-
-	// MSVC implementation copied from blackbone. In reality just need to modify the cookie to be non-default.
-	if (pLoadConfig32) {
+	if (pOptionalHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG].VirtualAddress) {
 		uint64_t pCookie = 0;
 
-		FILETIME systime = { 0 };
-		LARGE_INTEGER PerformanceCount = { { 0 } };
-		size_t size = 0;
-
-		GetSystemTimeAsFileTime(&systime);
-		QueryPerformanceCounter(&PerformanceCount);
-
-		uint32_t pid = GetProcessId(GetModuleHandle(0));
-		uint32_t thId = GetThreadId(GetCurrentThread());
-
-		uint64_t cookie = pid ^ thId ^ ((uintptr_t)&cookie);
-		switch (ntHeader->FileHeader.Machine) {
-		case IMAGE_FILE_MACHINE_AMD64:
-			size = sizeof(uint64_t);
-			pCookie = (uint64_t)(pLoadConfig64->SecurityCookie);
-
-			if (!pCookie)
-				break;
-
-			cookie ^= *reinterpret_cast<uint64_t*>(&systime);
-			cookie ^= (PerformanceCount.QuadPart << 32) ^ PerformanceCount.QuadPart;
-			cookie &= 0xFFFFFFFFFFFF;
+		srand(time(0));
+		switch (ntHeader->FileHeader.Machine) 
+		case IMAGE_FILE_MACHINE_AMD64: {
+			pCookie = (uint64_t)(((IMAGE_LOAD_CONFIG_DIRECTORY64*)(pBase + pOptionalHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG].VirtualAddress))->SecurityCookie);
+			*(uint64_t*)pCookie = rand();
 
 			// if we somehow hit default ++ it
-			if (cookie == 0x2B992DDFA232)
-				cookie++;
+			if (*(uint64_t*)pCookie == 0x2B992DDFA232)
+				(*(uint64_t*)pCookie)++;
 
 			break;
-		case IMAGE_FILE_MACHINE_I386:
-			size = sizeof(uint32_t);
-			pCookie = (uint64_t)(pLoadConfig32->SecurityCookie);
-
-			cookie &= 0xFFFFFFFF;
-			cookie ^= systime.dwHighDateTime ^ systime.dwLowDateTime;
-			cookie ^= PerformanceCount.LowPart;
-			cookie ^= PerformanceCount.HighPart;
+		case IMAGE_FILE_MACHINE_I386: 
+			auto pLoadConfig32 = 
+			pCookie = (uint64_t)(((IMAGE_LOAD_CONFIG_DIRECTORY32*)(pBase + pOptionalHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG].VirtualAddress))->SecurityCookie);
+			*(uint32_t*)pCookie = rand();
 
 			// if we somehow hit default ++ it
-			if (cookie == 0xBB40E64E) {
-				cookie++;
-			} else if (!(cookie & 0xFFFF0000)) {
-				cookie |= (cookie | 0x4711) << 16;
-			}
+			if (*(uint32_t*)pCookie == 0xBB40E64E)
+				(*(uint32_t*)pCookie)++;
 
 			break;
+		
 		}
-	
-		uint64_t pRebasedCookie = (uint64_t)(pBase + (pCookie - ntHeader->OptionalHeader.ImageBase));
-		memcpy((char*)pRebasedCookie, &cookie, size);
 	}
 
 	// Load deps and resolve imports
@@ -231,6 +201,10 @@ HMODULE ManualMapper::mapImage(std::wstring imagePath) {
 	// Save the old file header
 	pOldFileHeader = &pOldNtHeader->FileHeader;
 	
+	if (FileSize < pOldOptionalHeader->SizeOfHeaders) {
+		return NULL;
+	}
+
 	// Handle X86 and X64
 #ifdef _WIN64
 	// If the machine type is not the current file type we fail
@@ -267,10 +241,17 @@ HMODULE ManualMapper::mapImage(std::wstring imagePath) {
 	auto* pSectionHeader = IMAGE_FIRST_SECTION(pOldNtHeader);
 
 	// copy mem up until first section [0, section1)
-	memcpy(pTargetBase, pSourceData.get(), pSectionHeader->VirtualAddress);
+	uint64_t rollingImageSize = pOldOptionalHeader->SizeOfHeaders;
+	memcpy(pTargetBase, pSourceData.get(), pOldOptionalHeader->SizeOfHeaders);
 
 	// copy all the sections // [sec1, secN)
 	for (UINT i = 0; i != pOldFileHeader->NumberOfSections; ++i, ++pSectionHeader) {
+		// Each section is a buffer of raw data
+		rollingImageSize += pSectionHeader->SizeOfRawData;
+		if (FileSize < rollingImageSize) {
+			return NULL;
+		}
+
 		memcpy(pTargetBase + pSectionHeader->VirtualAddress, pSourceData.get() + pSectionHeader->PointerToRawData, pSectionHeader->SizeOfRawData);
 	}
 
