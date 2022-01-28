@@ -17,6 +17,12 @@ Random tools I made or otherwise just use for reversing quickly.
 # BlobRunner
 * Allocate and run shellcode, print shellcode base and wait for execution by key press.
 
+# COM-Code-Helper
+* Com plugin for IDA pro to automatically identify and label many com interfaces and some vtable structures
+
+# pdbfetch
+* Finds and downloads a PDB from the microsoft symbol server given an input binary. Caches to the symbol directory the same way windbg does.
+
 # IdaScripts
 Python helper scripts to do random stuff. May contain wrappers around ida operations, binja operations, or misc python utilities useful in low level stuff.
 

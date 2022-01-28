@@ -22,3 +22,6 @@
 [submodule "COM-Code-Helper"]
 	path = COM-Code-Helper
 	url = https://github.com/fboldewin/COM-Code-Helper.git
+[submodule "pdbfetch"]
+	path = pdbfetch
+	url = https://github.com/ajkhoury/pdbfetch.git
