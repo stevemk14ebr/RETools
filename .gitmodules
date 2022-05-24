@@ -25,3 +25,6 @@
 [submodule "GoReSym"]
 	path = GoReSym
 	url = https://github.com/mandiant/GoReSym.git
+[submodule "capa"]
+	path = capa
+	url = https://github.com/mandiant/capa.git
