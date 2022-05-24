@@ -22,3 +22,6 @@
 [submodule "pdbfetch"]
 	path = pdbfetch
 	url = https://github.com/ajkhoury/pdbfetch.git
+[submodule "GoReSym"]
+	path = GoReSym
+	url = https://github.com/mandiant/GoReSym.git
