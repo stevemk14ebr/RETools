@@ -8,7 +8,7 @@ Random tools I made or otherwise just use for reversing quickly.
 * Live memory C, C++, and other structure rebuilding tool
 
 # GoReSym
-* Extract GoLang function names, file paths, reconstruct user defines structures and interfaces, and print binary metadata. Amongst other things.
+* Extract GoLang function names, file paths, reconstruct user defined structures and interfaces, and print binary metadata. Amongst other things.
 
 # demumble
 * C++ library with python wrapper to demangle Itanium and MSVC symbols on all platforms (Linux, Mac, Windows)
