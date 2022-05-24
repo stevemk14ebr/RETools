@@ -41,6 +41,8 @@ Python helper scripts to do random stuff. May contain wrappers around ida operat
      
  * SLib:
      Steve's python lib. Simple python helpers to do binary work packaged into a nice python module.
+ 
+ * Misc: Some example IDA python scripts to do common things. Must be modified to be useful, just examples for common tasks.
      
  * Cfg:
      My preferences for IDA configuration. 
