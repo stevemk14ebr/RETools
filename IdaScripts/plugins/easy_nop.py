@@ -70,8 +70,8 @@ class NopAction(EA_Action):
             return 0
  
         for x in range(start, end):
-            # Maybe theres a smarter way to get the nop value for different archs e.g. Assemble('nop') -> 0x90
-            idaapi.patch_byte(x, 0x90)
+            # will prob fail on archs that don't have a nop instruction but whatever
+            idaapi.assemble(x, 0, x, True, "nop")
  
         for x in range(start + 1, end):
             idaapi.hide_item(x)
