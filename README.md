@@ -5,7 +5,7 @@ Random tools I made or otherwise just use for reversing quickly.
 * Search for PE files in a raw dump and display arch + pe file size to allow manual carving quickly
 
 # REClass
-* Live memory C, C++, and other structure rebuilding tool
+* Live memory C, C++, and other structure rebuilding tool. Shows a structured view over live memory so you can see values as they change.
 
 # GoReSym
 * Extract GoLang function names, file paths, reconstruct user defined structures and interfaces, and print binary metadata. Amongst other things.
