@@ -18,7 +18,7 @@ Random tools I made or otherwise just use for reversing quickly.
 * Command line application to JIT (via asmjit) compile a calling stub around N number of dll exports with arguments provided the calling convention. Additionally can load shellcode or manual mapping of dlls to easily debug dllmain and can read binary files to pass arbitrary data as argument. Wait for execution by key press or int3.
 
 # BlobRunner
-* Allocate and run shellcode, print shellcode base and wait for execution by key press.
+* Allocate and run shellcode, print shellcode base and wait for execution by key press. Simpler alternative than JITCall, doesn't support arguments.
 
 # COM-Code-Helper
 * Com plugin for IDA pro to automatically identify and label many com interfaces and some vtable structures
