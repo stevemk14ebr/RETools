@@ -45,7 +45,7 @@ Python helper scripts to do random stuff. May contain wrappers around ida operat
  * Misc: Some example IDA python scripts to do common things. Must be modified to be useful, just examples for common tasks.
      
  * Cfg:
-     My preferences for IDA configuration. 
+     My preferences for IDA configuration. Must manually change these flags, if you copy the configs directly you may accidentally break IDA as configs are not version forward (or backwards!) compatible. I recommend you just do a text diff on your configs and flip the values manually.
      * idagui.cfg: Escape closes windows disabled via OTHER_CLOSED_BY_ESC, TOOL_CLOSED_BY_ESC, CLOSED_BY_ESC. Hide/Unhide bindings changed to ctrl-shift-h and ctr-shift-u for tenkeyless keyboard support.
      * hexrays.cfg: COLLAPSE_LVARS true, GENERATE_EA_LABELS true, AUTO_UNHIDE true, MAX_FUNCSIZE expanded for stupid obfuscators, PSEUDOCODE_DOCKPOS DP_RIGHT, PSEUDOCODE_SYNCED true, HEXOPTIONS 0x821FF to mask off HO_ESC_CLOSES_VIEW
      * ida.cfg: PACK_DATABASE set to 2 for compressed idbs
