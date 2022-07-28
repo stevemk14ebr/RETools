@@ -5,7 +5,7 @@ Random tools I made or otherwise just use for reversing quickly.
 * Search for PE files in a raw dump and display arch + pe file size to allow manual carving quickly
 
 # REClass
-* Live memory C, C++, and other structure rebuilding tool
+* Live memory C, C++, and other structure rebuilding tool. Shows a structured view over live memory so you can see values as they change.
 
 # GoReSym
 * Extract GoLang function names, file paths, reconstruct user defined structures and interfaces, and print binary metadata. Amongst other things.
@@ -15,10 +15,10 @@ Random tools I made or otherwise just use for reversing quickly.
   * Modified from: https://github.com/nico/demumble
 
 # JITCall 
-* Command line application to JIT compile a calling stub around N number of dll exports with arguments provided the calling convention. Additionally can load shellcode or manual mapping of dlls to easily debug dllmain and can read binary files to pass arbitrary data as argument. Wait for execution by key press or int3.
+* Command line application to JIT (via asmjit) compile a calling stub around N number of dll exports with arguments provided the calling convention. Additionally can load shellcode or manual mapping of dlls to easily debug dllmain and can read binary files to pass arbitrary data as argument. Wait for execution by key press or int3.
 
 # BlobRunner
-* Allocate and run shellcode, print shellcode base and wait for execution by key press.
+* Allocate and run shellcode, print shellcode base and wait for execution by key press. Simpler alternative than JITCall, doesn't support arguments.
 
 # COM-Code-Helper
 * Com plugin for IDA pro to automatically identify and label many com interfaces and some vtable structures
@@ -45,7 +45,7 @@ Python helper scripts to do random stuff. May contain wrappers around ida operat
  * Misc: Some example IDA python scripts to do common things. Must be modified to be useful, just examples for common tasks.
      
  * Cfg:
-     My preferences for IDA configuration. 
+     My preferences for IDA configuration. Must manually change these flags, if you copy the configs directly you may accidentally break IDA as configs are not version forward (or backwards!) compatible. I recommend you just do a text diff on your configs and flip the values manually.
      * idagui.cfg: Escape closes windows disabled via OTHER_CLOSED_BY_ESC, TOOL_CLOSED_BY_ESC, CLOSED_BY_ESC. Hide/Unhide bindings changed to ctrl-shift-h and ctr-shift-u for tenkeyless keyboard support.
      * hexrays.cfg: COLLAPSE_LVARS true, GENERATE_EA_LABELS true, AUTO_UNHIDE true, MAX_FUNCSIZE expanded for stupid obfuscators, PSEUDOCODE_DOCKPOS DP_RIGHT, PSEUDOCODE_SYNCED true, HEXOPTIONS 0x821FF to mask off HO_ESC_CLOSES_VIEW
      * ida.cfg: PACK_DATABASE set to 2 for compressed idbs
