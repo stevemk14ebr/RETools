@@ -31,3 +31,6 @@
 [submodule "IdaScripts/plugins/sigmaker"]
 	path = IdaScripts/plugins/sigmaker
 	url = https://github.com/ajkhoury/SigMaker-x64.git
+[submodule "strace"]
+	path = strace
+	url = https://github.com/mandiant/strace
