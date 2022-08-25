@@ -10,6 +10,10 @@ Random tools I made or otherwise just use for reversing quickly.
 # GoReSym
 * Extract GoLang function names, file paths, reconstruct user defined structures and interfaces, and print binary metadata. Amongst other things.
 
+# STrace
+* Syscall hooking framework. Modify args, return values, etc in a patchguard compatible way.
+* Within this repo is a tool PDBReSym, which can download PDBs and Binaries from the MS symbol server, or symbolicate logs.
+
 # demumble
 * C++ library with python wrapper to demangle Itanium and MSVC symbols on all platforms (Linux, Mac, Windows)
   * Modified from: https://github.com/nico/demumble
@@ -23,11 +27,8 @@ Random tools I made or otherwise just use for reversing quickly.
 # COM-Code-Helper
 * Com plugin for IDA pro to automatically identify and label many com interfaces and some vtable structures
 
-# pdbfetch
-* Finds and downloads a PDB from the microsoft symbol server given an input binary. Caches to the symbol directory the same way windbg does.
-
 # IdaScripts
-Python helper scripts to do random stuff. May contain wrappers around ida operations, binja operations, or misc python utilities useful in low level stuff.
+Python helper scripts to do random stuff. May contain wrappers around ida operations, binja operations, or misc python utilities useful in low level stuff. See https://hex-rays.com/blog/igors-tip-of-the-week-33-idas-user-directory-idausr/ for the easiest way to use the plugins and configs.
 
  * Plugins:
      Ida plugins. Either raw binaries or submodules to the project if it's on github (and installable via src).
@@ -44,8 +45,7 @@ Python helper scripts to do random stuff. May contain wrappers around ida operat
  
  * Misc: Some example IDA python scripts to do common things. Must be modified to be useful, just examples for common tasks.
      
- * Cfg:
-     My preferences for IDA configuration. Must manually change these flags, if you copy the configs directly you may accidentally break IDA as configs are not version forward (or backwards!) compatible. I recommend you just do a text diff on your configs and flip the values manually.
+ * Cfg: 
      * idagui.cfg: Escape closes windows disabled via OTHER_CLOSED_BY_ESC, TOOL_CLOSED_BY_ESC, CLOSED_BY_ESC. Hide/Unhide bindings changed to ctrl-shift-h and ctr-shift-u for tenkeyless keyboard support.
      * hexrays.cfg: COLLAPSE_LVARS true, GENERATE_EA_LABELS true, AUTO_UNHIDE true, MAX_FUNCSIZE expanded for stupid obfuscators, PSEUDOCODE_DOCKPOS DP_RIGHT, PSEUDOCODE_SYNCED true, HEXOPTIONS 0x821FF to mask off HO_ESC_CLOSES_VIEW
      * ida.cfg: PACK_DATABASE set to 2 for compressed idbs
