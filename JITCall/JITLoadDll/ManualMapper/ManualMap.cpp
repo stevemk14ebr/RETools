@@ -264,6 +264,9 @@ HMODULE ManualMapper::mapImage(std::wstring imagePath) {
 		}
 	//}
 
+	std::cout << "Loaded at " << std::hex << ((uint64_t)pTargetBase) << std::dec << std::endl;
+
+
 	if (pOldFileHeader->NumberOfSections <= 0) {
 		std::cout << "[!] file has no section, loading aborted" << std::endl;
 		return NULL;

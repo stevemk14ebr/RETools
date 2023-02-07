@@ -37,7 +37,7 @@ Python helper scripts to do random stuff. May contain wrappers around ida operat
      * easy_nop: select and right click an assembly sequence to replace with 0x90 nops
      * flare-capa: find interesting functions in a binary
      * sigmaker: create and search for assembly patterns automatically in IDA
-     * HexRaysPyTools: C++ structure rebuilding tool, right click else conditions to swap if/then, much more.
+     * HexRaysPyTools (oopsmishap fork): C++ structure rebuilding tool, right click else conditions to swap if/then, much more. Fork includes new template build feature and fixes
      * IDAFuzzy: search plugin
      
  * SLib:
@@ -47,5 +47,5 @@ Python helper scripts to do random stuff. May contain wrappers around ida operat
      
  * Cfg: 
      * idagui.cfg: Escape closes windows disabled via OTHER_CLOSED_BY_ESC, TOOL_CLOSED_BY_ESC, CLOSED_BY_ESC. Hide/Unhide bindings changed to ctrl-shift-h and ctr-shift-u for tenkeyless keyboard support.
-     * hexrays.cfg: COLLAPSE_LVARS true, GENERATE_EA_LABELS true, AUTO_UNHIDE true, MAX_FUNCSIZE expanded for stupid obfuscators, PSEUDOCODE_DOCKPOS DP_RIGHT, PSEUDOCODE_SYNCED true, HEXOPTIONS 0x821FF to mask off HO_ESC_CLOSES_VIEW
+     * hexrays.cfg: COLLAPSE_LVARS true, GENERATE_EA_LABELS true, AUTO_UNHIDE true, MAX_FUNCSIZE expanded for stupid obfuscators, PSEUDOCODE_DOCKPOS DP_RIGHT, PSEUDOCODE_SYNCED true, HEXOPTIONS 0x821BF to mask off HO_ESC_CLOSES_VIEW and HO_CONST_STRINGS, MAX_NCOMMAS 1 for nicer conditional formatting
      * ida.cfg: PACK_DATABASE set to 2 for compressed idbs
