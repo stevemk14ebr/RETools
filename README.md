@@ -39,11 +39,13 @@ Python helper scripts to do random stuff. May contain wrappers around ida operat
      * sigmaker: create and search for assembly patterns automatically in IDA
      * HexRaysPyTools (oopsmishap fork): C++ structure rebuilding tool, right click else conditions to swap if/then, much more. Fork includes new template build feature and fixes
      * IDAFuzzy: search plugin
+     * Define String From Selection: Allows selecting a region of memory and defining a string of that specific selection length (not null terminated). Useful for Go and other languages with string length stored seperately from the non-null terminated string.
      
  * SLib:
      Steve's python lib. Simple python helpers to do binary work packaged into a nice python module.
  
- * Misc: Some example IDA python scripts to do common things. Must be modified to be useful, just examples for common tasks.
+ * Misc: Some example IDA python scripts to do common things. Just examples for common tasks.
+     * reset_all_colors: Strip set_color's from an IDB received from someone else and reset to theme colors (remove call highlights etc).
      
  * Cfg: 
      * idagui.cfg: Escape closes windows disabled via OTHER_CLOSED_BY_ESC, TOOL_CLOSED_BY_ESC, CLOSED_BY_ESC. Hide/Unhide bindings changed to ctrl-shift-h and ctr-shift-u for tenkeyless keyboard support.
