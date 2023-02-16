@@ -22,9 +22,6 @@
 [submodule "GoReSym"]
 	path = GoReSym
 	url = https://github.com/mandiant/GoReSym.git
-[submodule "capa"]
-	path = capa
-	url = https://github.com/mandiant/capa.git
 [submodule "IdaScripts/plugins/sigmaker"]
 	path = IdaScripts/plugins/sigmaker
 	url = https://github.com/ajkhoury/SigMaker-x64.git
