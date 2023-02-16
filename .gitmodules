@@ -25,6 +25,3 @@
 [submodule "strace"]
 	path = strace
 	url = https://github.com/mandiant/strace
-[submodule "IdaScripts/plugins/capa"]
-	path = IdaScripts/plugins/capa
-	url = https://github.com/mandiant/capa
