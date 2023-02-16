@@ -7,9 +7,6 @@
 [submodule "JITCall/asmjit"]
 	path = JITCall/asmjit
 	url = https://github.com/asmjit/asmjit.git/
-[submodule "IdaScripts/plugins/capa"]
-	path = IdaScripts/plugins/capa
-	url = https://github.com/fireeye/capa.git
 [submodule "IdaScripts/plugins/HexRaysPyTools"]
 	path = IdaScripts/plugins/HexRaysPyTools
 	url = https://github.com/oopsmishap/HexRaysPyTools.git
