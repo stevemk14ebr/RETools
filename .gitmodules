@@ -25,3 +25,12 @@
 [submodule "strace"]
 	path = strace
 	url = https://github.com/mandiant/strace
+[submodule "IdaScripts/plugins/capa-rules"]
+	path = IdaScripts/plugins/capa-rules
+	url = https://github.com/mandiant/capa-rules.git
+[submodule "IdaScripts/plugins/HRDevHelper"]
+	path = IdaScripts/plugins/HRDevHelper
+	url = https://github.com/patois/HRDevHelper.git
+[submodule "IdaScripts/plugins/d810"]
+	path = IdaScripts/plugins/d810
+	url = https://github.com/joydo/d810.git
