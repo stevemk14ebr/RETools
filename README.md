@@ -27,6 +27,9 @@ Random tools I made or otherwise just use for reversing quickly.
 # COM-Code-Helper
 * Com plugin for IDA pro to automatically identify and label many com interfaces and some vtable structures
 
+# SingleFileExtractor
+* A utility for extracting .NET single file bundles to disk while maintaining the internal bundle folder structure. Also supported by ILSpy fwiw.
+
 # IdaScripts
 Python helper scripts to do random stuff. May contain wrappers around ida operations, binja operations, or misc python utilities useful in low level stuff. See https://hex-rays.com/blog/igors-tip-of-the-week-33-idas-user-directory-idausr/ for the easiest way to use the plugins and configs.
 

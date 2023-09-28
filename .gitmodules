@@ -34,3 +34,6 @@
 [submodule "IdaScripts/plugins/d810"]
 	path = IdaScripts/plugins/d810
 	url = https://github.com/joydo/d810.git
+[submodule "SingleFileExtractor"]
+	path = SingleFileExtractor
+	url = https://github.com/stevemk14ebr/SingleFileExtractor.git
