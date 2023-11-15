@@ -53,4 +53,4 @@ Python helper scripts to do random stuff. May contain wrappers around ida operat
  * Cfg: 
      * idagui.cfg: Escape closes windows disabled via OTHER_CLOSED_BY_ESC, TOOL_CLOSED_BY_ESC, CLOSED_BY_ESC. Hide/Unhide bindings changed to ctrl-shift-h and ctr-shift-u for tenkeyless keyboard support.
      * hexrays.cfg: COLLAPSE_LVARS true, GENERATE_EA_LABELS true, AUTO_UNHIDE true, MAX_FUNCSIZE expanded for stupid obfuscators, PSEUDOCODE_DOCKPOS DP_RIGHT, PSEUDOCODE_SYNCED true, HEXOPTIONS 0x821BF to mask off HO_ESC_CLOSES_VIEW and HO_CONST_STRINGS, MAX_NCOMMAS 1 for nicer conditional formatting
-     * ida.cfg: PACK_DATABASE set to 2 for compressed idbs
+     * ida.cfg: PACK_DATABASE set to 2 for compressed idbs, DemangleNames set to DEMNAM_NAME to show demangled by default
