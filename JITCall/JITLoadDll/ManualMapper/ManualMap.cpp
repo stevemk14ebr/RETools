@@ -337,7 +337,7 @@ std::vector<std::string> ManualMapper::getExports(HMODULE hModule) {
 	return exports;
 }
 
-uint64_t ManualMapper::getProcAddress(HMODULE hModule, std::string procName) {
+size_t ManualMapper::getProcAddress(HMODULE hModule, std::string procName) {
 	ExportDirectoryPtrs exportPtrs = getExportDir(hModule);
 	if (!exportPtrs.exports) {
 		return 0;
@@ -346,7 +346,7 @@ uint64_t ManualMapper::getProcAddress(HMODULE hModule, std::string procName) {
 	for (uint32_t i = 0; i < exportPtrs.exports->NumberOfNames; i++) {
 		char* exportName = RVA2VA(char*, hModule, exportPtrs.addressOfNames[i]);
 		if (_stricmp(exportName, procName.c_str()) == 0)
-			return RVA2VA(uint64_t, hModule, exportPtrs.addressOfFunctions[i]);
+			return RVA2VA(size_t, hModule, exportPtrs.addressOfFunctions[exportPtrs.addressOfNameOrdinals[i]]);
 	}
 	return 0;
 }
