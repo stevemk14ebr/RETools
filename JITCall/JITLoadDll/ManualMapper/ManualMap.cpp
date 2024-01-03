@@ -123,18 +123,18 @@ bool ManualMapper::loadImage(char* pBase) {
 				continue;
 			}
 
-			uint64_t* pThunkRef = (uint64_t*)(pBase + pImportDescr->OriginalFirstThunk);
-			uint64_t* pFuncRef = (uint64_t*)(pBase + pImportDescr->FirstThunk);
+			size_t* pThunkRef = (size_t*)(pBase + pImportDescr->OriginalFirstThunk);
+			size_t* pFuncRef = (size_t*)(pBase + pImportDescr->FirstThunk);
 
 			if (!pThunkRef)
 				pThunkRef = pFuncRef;
 
 			for (; *pThunkRef; ++pThunkRef, ++pFuncRef) {
 				if (IMAGE_SNAP_BY_ORDINAL(*pThunkRef)) {
-					*pFuncRef = (uint64_t)GetProcAddress(hDll, reinterpret_cast<char*>(*pThunkRef & 0xFFFF));
+					*pFuncRef = (size_t)GetProcAddress(hDll, reinterpret_cast<char*>(*pThunkRef & 0xFFFF));
 				} else {
 					auto pImport = (IMAGE_IMPORT_BY_NAME*)(pBase + (*pThunkRef));
-					*pFuncRef = (uint64_t)GetProcAddress(hDll, pImport->Name);
+					*pFuncRef = (size_t)GetProcAddress(hDll, pImport->Name);
 				}
 			}
 			++pImportDescr;
